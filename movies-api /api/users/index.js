@@ -55,6 +55,19 @@ router.put('/:id', async (req, res) => {
 });
 
 
+// Delete User
+router.delete('/:id', async (req, res)=> {
+    const result = await User.deleteOne({
+        _id: req.params.id,
+    });
+    if (result.deletedCount){
+        res.status(200).json({code:200, msg: 'User Deleted Successfully'});
+    }else {
+        res.status(404).json({code: 404, msg:'Unable to find User'});
+    }
+});
+
+
 async function registerUser(req, res) {
     // Add input validation logic here
     await User.create(req.body);
