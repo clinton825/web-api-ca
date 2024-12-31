@@ -1,3 +1,5 @@
+import fetch from 'node-fetch'
+
 export const getMovies = (page = 1, genre = "", sort = "popularity.desc") => {
   const genreParam = genre ? `&with_genres=${genre}` : "";
   const sortParam = `&sort_by=${sort}`;
