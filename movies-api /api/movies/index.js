@@ -3,6 +3,11 @@ import asyncHandler from 'express-async-handler';
 import express from 'express';
 import {getUpcomingMovies } from '../tmdb-api';
 import { getMovieGenres  } from '../tmdb-api';
+import { getPopularPeople } from '../tmdb-api';
+import { getTrendingMovies } from '../tmdb-api';
+import { getLatestMovies } from '../tmdb-api';
+import { getPopularMovies } from '../tmdb-api';
+import { searchMovies } from '../tmdb-api';
 const router = express.Router();
 
 router.get('/', asyncHandler(async (req, res) => {
@@ -52,9 +57,47 @@ router.get('/tmdb/upcoming', asyncHandler(async (req, res) => {
 }));
 
 // Get popular people
-router.get('tmdb/people', asyncHandler(async (req, res) => {
-    const people = await getPopularPeople();
-    res.status(200).json(people);
+router.get('/tmdb/people', asyncHandler(async (req, res) => {
+    try {
+        const popularPeople = await getPopularPeople();
+        res.status(200).json(popularPeople);
+    } catch (error) {
+        res.status(500).json({
+            message: 'Failed to fetch popular people from TMDB',
+            error: error.message
+        });
+    }
 }));
+
+
+// Get trending movies from TMDB
+router.get('/tmdb/trending', asyncHandler(async (req, res) => {
+    const movies = await getTrendingMovies();
+    res.json(movies);
+}));
+
+// Get popular movies from TMDB
+router.get('/tmdb/popular', asyncHandler(async (req, res) => {
+    const movies = await getPopularMovies();
+    res.json(movies);
+}));
+
+// Search movies
+router.get('/tmdb/search', asyncHandler(async (req, res) => {
+    const { q } = req.query;
+    if (!q) {
+        res.status(400).json({ message: 'Search query is required' });
+        return;
+    }
+    const results = await searchMovies(q);
+    res.json(results);
+}));
+
+// Get latest movies
+router.get('/tmdb/latest', asyncHandler(async (req, res) => {
+    const movies = await getLatestMovies();
+    res.json(movies);
+}));
+
 
 export default router;

@@ -8,8 +8,11 @@ import CardHeader from "@mui/material/CardHeader";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import DeleteIcon from "@mui/icons-material/Delete";
 import CalendarIcon from "@mui/icons-material/CalendarTodayTwoTone";
 import StarRateIcon from "@mui/icons-material/StarRate";
+import IconButton from "@mui/material/IconButton";
 import Avatar from "@mui/material/Avatar";
 import Grid from "@mui/material/Grid";
 import { Link } from "react-router-dom";
@@ -62,16 +65,33 @@ export default function MovieCard({ movie }) {
         </Grid>
       </CardContent>
       <CardActions disableSpacing>
-        <Button
-          variant="outlined"
-          size="medium"
-          color={isFavorite ? "secondary" : "primary"}
-          onClick={() =>
-            isFavorite ? removeFromFavorites(movie) : addToFavorites(movie)
-          }
-        >
-          {isFavorite ? "Remove from Favorites" : "Add to Favorites"}
-        </Button>
+        {isFavorite ? (
+          <IconButton 
+            aria-label="remove from favorites"
+            onClick={() => removeFromFavorites(movie)}
+            sx={{
+              color: "grey.500",
+              "&:hover": {
+                color: "error.main",
+              },
+            }}
+          >
+            <DeleteIcon />
+          </IconButton>
+        ) : (
+          <IconButton 
+            aria-label="add to favorites"
+            onClick={() => addToFavorites(movie)}
+            sx={{
+              color: "grey.500",
+              "&:hover": {
+                color: "red",
+              },
+            }}
+          >
+            <FavoriteBorderIcon />
+          </IconButton>
+        )}
         <Link to={`/movies/${movie.id}`}>
           <Button variant="outlined" size="medium" color="primary">
             More Info ...

@@ -1,38 +1,55 @@
 import React, { useState, createContext } from "react";
+import PropTypes from "prop-types";
+import { useNavigate } from "react-router-dom";
 import { login, signup } from "../api/movies-api";
 
 export const AuthContext = createContext(null);
 
-const AuthContextProvider = (props) => {
+const AuthContextProvider = ({ children }) => {
+  const navigate = useNavigate();
   const existingToken = localStorage.getItem("token");
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(!!existingToken);
   const [authToken, setAuthToken] = useState(existingToken);
   const [userName, setUserName] = useState("");
 
-  //Function to put JWT token in local storage.
   const setToken = (data) => {
     localStorage.setItem("token", data);
     setAuthToken(data);
-  }
+  };
 
   const authenticate = async (username, password) => {
-    const result = await login(username, password);
-    if (result.token) {
-      setToken(result.token)
-      setIsAuthenticated(true);
-      setUserName(username);
+    try {
+      const result = await login(username, password);
+      if (result.token) {
+        setToken(result.token);
+        setIsAuthenticated(true);
+        setUserName(username);
+      } else {
+        console.error("Authentication failed:", result.message);
+        throw new Error("Invalid credentials");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      throw error;
     }
   };
 
   const register = async (username, password) => {
-    const result = await signup(username, password);
-    console.log(result.code);
-    return (result.code == 201) ? true : false;
+    try {
+      const result = await signup(username, password);
+      return result.code === 201;
+    } catch (error) {
+      console.error("Signup error:", error);
+      return false;
+    }
   };
 
   const signout = () => {
-    setTimeout(() => setIsAuthenticated(false), 100);
-  }
+    localStorage.removeItem("token");
+    setAuthToken(null);
+    setIsAuthenticated(false);
+    navigate("/login"); // Redirect to login page
+  };
 
   return (
     <AuthContext.Provider
@@ -41,12 +58,17 @@ const AuthContextProvider = (props) => {
         authenticate,
         register,
         signout,
-        userName
+        userName,
       }}
     >
-      {props.children}
+      {children}
     </AuthContext.Provider>
   );
 };
+
+AuthContextProvider.propTypes = {
+  children: PropTypes.node.isRequired,
+};
+
 
 export default AuthContextProvider;

@@ -33,14 +33,12 @@ const SiteHeader = ({ history }) => {
 
   const menuOptions = [
     { label: "Home", path: "/" },
-    { label: "Upcoming", path: "/movies/upcoming" },
     { label: "Favorites", path: "/movies/favorites" },
+    { label: "Upcoming Movies", path: "/movies/UpcomingMovies" },
     { label: "Trending", path: "/movies/trending" },
     { label: "Latest", path: "/movies/latest" },
-    { label: "popular", path: "/movies/popular" },
+    { label: "Popular", path: "/movies/popular" },
     { label: "Actors", path: "/people" },
-    // { label: "Option 4", path: "/" },
-    // { label: "Option 5", path: "/" },
   ];
 
   const handleMenuSelect = (pageURL) => {
@@ -184,9 +182,7 @@ const SiteHeader = ({ history }) => {
       Home
     </Button>
 
-    <Button color="inherit" onClick={() => handleMenuSelect('/favorites')}>
-      Favorites
-    </Button>
+   
     <Button color="inherit" onClick={() => handleMenuSelect('/login')}>
       Login
     </Button>
