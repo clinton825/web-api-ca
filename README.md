@@ -12,9 +12,10 @@ Here is a list of additional features implemented in the API that were not in th
 - **/tmdb/movies/upcoming:** Fetch upcoming movies.
 - **/tmdb/movies/popular:** Fetch popular movies.
 - **/tmdb/movies/popular-actors:** Fetch popular actors.
+- **/tmdb/movies/latest:** Get Latest Movies.
 - **/tmdb/movies/search:** Search for movies.
 - **/tmdb/movies/genre/:genre:** Get movies by genre.
-- **/tmdb/movies/details/:id:** Get detailed information about a movie.
+- **/tmdb/movies/trending/:** Get trending movie.
 - **/tmdb/movies/reviews/:id:** Fetch reviews for a specific movie.
 - **Password Validation in User Registration:** Passwords must meet these criteria:
   - Minimum length: 8 characters.
@@ -22,7 +23,7 @@ Here is a list of additional features implemented in the API that were not in th
   - At least one lowercase letter.
   - At least one digit.
   - At least one special character.
-- **User Authentication:** Users can create accounts, log in, and access features such as trending and upcoming movies.
+- **User Authentication:** Users can create accounts, log in, and access features such as trending and upcoming popular movies and actors .
 
 ---
 
@@ -73,8 +74,6 @@ SECRET=YourJWTSecret
 | `/api/movies/search?q={query}` | GET | Searches for movies based on the provided query. |
 | `/api/movies/latest` | GET | Gets information about the latest movies. |
 | `/api/movies/{movieid}/reviews` | POST | Creates a new review for a movie. |
-| `/api/movies/{movieid}/reviews/{reviewid}` | PUT | Updates an existing review. |
-| `/api/movies/{movieid}/reviews/{reviewid}` | DELETE | Deletes an existing review. |
 | `/api/movies` | POST | Adds a new movie to the database. |
 | `/api/movies/{movieid}` | PUT | Updates details for a specific movie. |
 | `/api/movies/{movieid}` | DELETE | Deletes a specific movie from the database. |
@@ -82,9 +81,7 @@ SECRET=YourJWTSecret
 | `/api/users/login` | POST | Logs in a user. |
 | `/api/users/logout` | POST | Logs out a user. |
 | `/api/users/me` | GET | Retrieves details for the logged-in user. |
-| `/api/users/me/reviews` | GET | Retrieves a list of reviews for the logged-in user. |
-| `/api/users/me/reviews/{reviewid}` | GET | Retrieves details for a specific review. |
-| `/api/users/me/reviews/{reviewid}` | PUT | Updates an existing review. |
+
 
 ---
 
@@ -102,11 +99,9 @@ Here is the testing plan to verify the features:
 | 6 | `/api/movies/search` | Verify searching movies. |
 | 7 | `/api/movies/latest` | Verify fetching the latest movies. |
 | 8 | `/api/movies/{movieid}/reviews` | Verify creating a review. |
-| 9 | `/api/movies/{movieid}/reviews/{reviewid}` | Verify updating a review. |
-| 10 | `/api/movies/{movieid}/reviews/{reviewid}` | Verify deleting a review. |
-| 11 | `/api/movies` | Verify adding a new movie. |
-| 12 | `/api/movies/{movieid}` | Verify updating movie details. |
-| 13 | `/api/movies/{movieid}` | Verify deleting a movie. |
+| 9 | `/api/movies` | Verify adding a new movie. |
+| 10| `/api/movies/{movieid}` | Verify updating movie details. |
+| 11| `/api/movies/{movieid}` | Verify deleting a movie. |
 
 ---
 

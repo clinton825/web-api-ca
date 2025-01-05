@@ -8,6 +8,8 @@ import { getTrendingMovies } from '../tmdb-api';
 import { getLatestMovies } from '../tmdb-api';
 import { getPopularMovies } from '../tmdb-api';
 import { searchMovies } from '../tmdb-api';
+import { getMovieReviews } from '../tmdb-api'; 
+import { protect } from '../../authenticate/authMiddleware.js';
 const router = express.Router();
 
 router.get('/', asyncHandler(async (req, res) => {
@@ -97,6 +99,55 @@ router.get('/tmdb/search', asyncHandler(async (req, res) => {
 router.get('/tmdb/latest', asyncHandler(async (req, res) => {
     const movies = await getLatestMovies();
     res.json(movies);
+}));
+
+// Get Movie Reviews
+router.get('/tmdb/reviews/:id', asyncHandler(async (req, res) => {
+    const movieId = req.params.id;
+    
+    if (!movieId) {
+        return res.status(400).json({
+            success: false,
+            message: 'Movie ID is required'
+        });
+    }
+    
+    const reviews = await getMovieReviews(movieId);
+    res.status(200).json(reviews);
+}));
+
+// Add new movie to database
+router.post('/', protect, asyncHandler(async (req, res) => {
+    const movie = await movieModel.create(req.body);
+    res.status(201).json(movie);
+}));
+
+// Update movie
+router.put('/:movieId', protect, asyncHandler(async (req, res) => {
+    const movie = await movieModel.findByIdAndUpdate(
+        req.params.movieId,
+        req.body,
+        { new: true }
+    );
+    
+    if (!movie) {
+        res.status(404).json({ message: 'Movie not found' });
+        return;
+    }
+    
+    res.json(movie);
+}));
+
+// Delete movie
+router.delete('/:movieId', protect, asyncHandler(async (req, res) => {
+    const movie = await movieModel.findByIdAndDelete(req.params.movieId);
+    
+    if (!movie) {
+        res.status(404).json({ message: 'Movie not found' });
+        return;
+    }
+    
+    res.json({ message: 'Movie deleted' });
 }));
 
 

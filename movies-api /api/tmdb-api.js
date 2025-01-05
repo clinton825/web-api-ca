@@ -115,3 +115,22 @@ export const getLatestMovies = async () => {
         throw error;
     }
 };
+
+
+
+export const getMovieReviews = async (id) => {
+    try {
+        const response = await fetch(
+            `https://api.themoviedb.org/3/movie/${id}/reviews?api_key=${process.env.TMDB_KEY}&language=en-US`
+        );
+        
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message);
+        }
+        
+        return await response.json();
+    } catch (error) {
+        throw error;
+    }
+};

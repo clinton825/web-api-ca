@@ -2,6 +2,7 @@ import express from 'express';
 import User from './userModel';
 import asyncHandler from 'express-async-handler';
 import jwt from 'jsonwebtoken';
+import { protect } from '../../authenticate/authMiddleware.js';
 const router = express.Router(); // eslint-disable-line
 
 // Get all users
@@ -89,6 +90,40 @@ async function authenticateUser(req, res) {
     }
 }
 
+// post the user who is login
+router.post('/login', asyncHandler(async (req, res) => {
+    const { username, password } = req.body;
+    
+    const user = await User.findOne({ username });
+    if (user && (await user.comparePassword(password))) {
+        const token = jwt.sign({ id: user._id }, process.env.SECRET, {
+            expiresIn: '30d'
+        });
+        
+        res.json({
+            _id: user._id,
+            username: user.username,
+            token
+        });
+    } else {
+        res.status(401).json({ message: 'Invalid credentials' });
+    }
+}));
+
+
+// Logout user
+router.post('/logout', (req, res) => {
+    res.json({ message: 'Logged out successfully' });
+});
+
+// Get user profile
+router.get('/me', protect, asyncHandler(async (req, res) => {
+    const user = await User.findById(req.user.id).select('-password');
+    if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+    }
+    res.json(user);
+}));
 
 
 export default router;

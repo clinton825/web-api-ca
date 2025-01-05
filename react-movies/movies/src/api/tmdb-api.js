@@ -220,9 +220,6 @@ export const getPopularPeople = () => {
     .catch((error) => {
       throw error
    });
-
-
-   
    
   };
 
